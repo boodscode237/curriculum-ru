@@ -1,0 +1,1470 @@
+<html lang="ru" class="fontawesome-i2svg-active fontawesome-i2svg-complete">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ИИ для Молодых Умов: Годовой Учебный Путь</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <!-- GSAP and ScrollTrigger CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'sage': '#87A96B',
+                        'clay': '#D4A574',
+                        'teal': '#2D7D7D',
+                        'navy': '#1E3A5F',
+                        'cream': '#F7F5F3',
+                        'charcoal': '#2C2C2C'
+                    },
+                    fontFamily: {
+                        'serif': ['Playfair Display', 'serif'],
+                        'sans': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            overflow-x: hidden; /* Prevent horizontal scroll due to animations */
+        }
+        .toc-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(135deg, #F7F5F3 0%, #E8E5E1 100%);
+            border-right: 1px solid #D4A574;
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 2rem 1.5rem;
+        }
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+            position: relative; /* Needed for canvas positioning */
+            z-index: 1; /* Ensure content is above canvas */
+            background-color: #F7F5F3; /* Ensure content background is opaque */
+        }
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+            min-height: 60vh;
+        }
+        .bento-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #E8E5E1;
+        }
+        .citation {
+            color: #2D7D7D;
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px dotted #2D7D7D;
+        }
+        .citation:hover {
+            background-color: rgba(45, 125, 125, 0.1);
+        }
+        .week-card {
+            background: linear-gradient(135deg, #FFFFFF 0%, #F7F5F3 100%);
+            border-left: 4px solid #87A96B;
+            margin-bottom: 2rem;
+        }
+        @media (max-width: 1024px) {
+            .toc-fixed {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            .toc-fixed.open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .hero-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .mermaid-control-btn:not(.reset-zoom) {
+                display: none;
+            }
+            .mermaid-controls {
+                top: auto;
+                bottom: 15px;
+                right: 15px;
+            }
+        }
+        .hero-overlay {
+            background: linear-gradient(135deg, rgba(30, 58, 95, 0.9) 0%, rgba(45, 125, 125, 0.8) 100%);
+        }
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, #D4A574 50%, transparent 100%);
+            margin: 4rem 0;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(135, 169, 107, 0.1) 0%, rgba(45, 125, 125, 0.1) 100%);
+            border: 1px solid rgba(135, 169, 107, 0.3);
+        }
+
+        /* Canvas specific styles */
+        #parallaxCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0; /* Ensure it's behind content */
+            pointer-events: none; /* Allow clicks to pass through */
+        }
+
+        /* Mermaid diagram styling */
+        .mermaid-container {
+            display: flex;
+            justify-content: center;
+            min-height: 300px;
+            max-height: 800px;
+            background: #ffffff;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mermaid-container .mermaid {
+            width: 100%;
+            max-width: 100%;
+            height: 100%;
+            cursor: grab;
+            transition: transform 0.3s ease;
+            transform-origin: center center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            touch-action: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .mermaid-container .mermaid svg {
+            max-width: 100%;
+            height: 100%;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .mermaid-container .mermaid:active {
+            cursor: grabbing;
+        }
+
+        .mermaid-container.zoomed .mermaid {
+            height: 100%;
+            width: 100%;
+            cursor: grab;
+        }
+
+        .mermaid-controls {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 10px;
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .mermaid-control-btn {
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #374151;
+            font-size: 14px;
+            min-width: 36px;
+            height: 36px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mermaid-control-btn:hover {
+            background: #f8fafc;
+            border-color: #3b82f6;
+            color: #3b82f6;
+            transform: translateY(-1px);
+        }
+
+        .mermaid-control-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Enhanced mermaid theme for better contrast and unified styling */
+        .mermaid .node rect,
+        .mermaid .node circle,
+        .mermaid .node ellipse,
+        .mermaid .node polygon {
+            stroke: #2C2C2C !important;
+            stroke-width: 2px !important;
+        }
+
+        .mermaid .node .label {
+            color: #2C2C2C !important;
+            font-weight: 500 !important;
+            font-size: 14px !important;
+        }
+
+        .mermaid .edgePath .path {
+            stroke: #2D7D7D !important;
+            stroke-width: 2px !important;
+        }
+
+        .mermaid .edgeLabel {
+            background-color: #FFFFFF !important;
+            color: #2C2C2C !important;
+            font-weight: 500 !important;
+            border: 1px solid #D4A574 !important;
+            border-radius: 4px !important;
+            padding: 2px 6px !important;
+        }
+
+        /* Ensure proper contrast for different node types */
+        .mermaid .node[style*="fill:#87A96B"] .label,
+        .mermaid .node[style*="fill:#D4A574"] .label,
+        .mermaid .node[style*="fill:#2D7D7D"] .label,
+        .mermaid .node[style*="fill:#1E3A5F"] .label {
+            color: #FFFFFF !important;
+            font-weight: 600 !important;
+        }
+
+        .mermaid .node[style*="fill:#F7F5F3"] .label {
+            color: #2C2C2C !important;
+            font-weight: 600 !important;
+        }
+
+        /* Timeline specific styling */
+        .mermaid .section {
+            fill: #F7F5F3 !important;
+            stroke: #87A96B !important;
+            stroke-width: 2px !important;
+        }
+
+        .mermaid .section0, .mermaid .section1, .mermaid .section2, .mermaid .section3 {
+            fill: #F7F5F3 !important;
+        }
+
+        .mermaid .cScale0, .mermaid .cScale1, .mermaid .cScale2, .mermaid .cScale3 {
+            fill: #87A96B !important;
+        }
+
+        .mermaid .task {
+            fill: #FFFFFF !important;
+            stroke: #2D7D7D !important;
+            stroke-width: 2px !important;
+        }
+
+        .mermaid .taskText {
+            fill: #2C2C2C !important;
+            font-weight: 500 !important;
+            font-size: 12px !important;
+        }
+
+        /* Responsive adjustments for small screens */
+        @media (max-width: 767px) {
+            .mermaid-container {
+                padding: 15px;
+            }
+            /* Adjust hero section font sizes */
+            .hero-grid h1 {
+                font-size: 2.25rem;
+                line-height: 2.5rem;
+            }
+            .hero-grid p {
+                font-size: 1rem;
+            }
+            /* Adjust padding in bento cards */
+            .bento-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body class="font-sans text-charcoal bg-cream overflow-x-hidden">
+    <!-- Parallax Canvas Background -->
+    <canvas id="parallaxCanvas"></canvas>
+
+    <!-- Mobile Menu Toggle -->
+    <div id="mobile-menu-toggle" class="lg:hidden fixed top-4 left-4 z-50 bg-navy text-white p-3 rounded-full shadow-lg">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <!-- Table of Contents (Fixed Sidebar) -->
+    <aside id="toc" class="toc-fixed hidden lg:block">
+        <h2 class="font-serif text-3xl font-bold text-navy mb-8">ИИ для Молодых Умов</h2>
+        <nav>
+            <ul class="space-y-3 text-lg">
+                <li><a href="#introduction" class="text-gray-700 hover:text-navy transition-colors">Введение</a></li>
+                <li><a href="#segment1" class="text-gray-700 hover:text-navy transition-colors">Сегмент 1: Основы ИИ</a></li>
+                <li><a href="#segment2" class="text-gray-700 hover:text-navy transition-colors">Сегмент 2: Машинное Обучение</a></li>
+                <li><a href="#segment3" class="text-gray-700 hover:text-navy transition-colors">Сегмент 3: Компьютерное Зрение</a></li>
+                <li><a href="#segment4" class="text-gray-700 hover:text-navy transition-colors">Сегмент 4: Обработка Естественного Языка</a></li>
+                <li><a href="#segment5" class="text-gray-700 hover:text-navy transition-colors">Сегмент 5: Выпускные Проекты</a></li>
+            </ul>
+        </nav>
+        <div class="mt-12 p-4 bg-clay/10 rounded-lg border border-clay/20 text-sm">
+            <p class="font-semibold text-clay mb-2">Ключевой Вывод</p>
+            <p class="text-gray-700">Образование в области ИИ для молодых учащихся развивает критическое мышление, навыки решения проблем и готовит их к будущему, формируемому технологиями.</p>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section id="introduction" class="relative bg-navy text-white py-16 px-8 overflow-hidden min-h-screen flex items-center">
+            <div class="hero-overlay absolute inset-0"></div>
+            <div class="container mx-auto max-w-6xl relative z-10 hero-grid">
+                <div class="text-center lg:text-left">
+                    <h1 class="font-serif text-5xl lg:text-6xl font-bold leading-tight mb-4 text-cream/90">
+                        ИИ для Молодых Умов: Годовой Учебный Путь
+                    </h1>
+                    <p class="text-lg lg:text-xl leading-relaxed mb-8 text-gray-300">
+                        Расширение возможностей следующего поколения с помощью фундаментальных знаний и практических навыков в области искусственного интеллекта, содействие инновациям и этическому пониманию.
+                    </p>
+                    <a href="#segment1" class="inline-block bg-sage text-white font-semibold px-8 py-3 rounded-full shadow-lg hover:bg-sage-dark transition-colors">
+                        Изучить Учебный План
+                    </a>
+                </div>
+                <div class="flex justify-center items-center">
+                    <img src="https://kimi-web-img.moonshot.cn/img/cdn.shopify.com/a2f81fa0bdb328a83f4d53a3fa93783b6cb94cc8.jpg" alt="Иллюстрация ИИ" class="rounded-xl shadow-2xl object-cover h-64 w-full max-w-md" onerror="this.onerror=null;this.src='https://placehold.co/400x300/87A96B/FFFFFF?text=Иллюстрация+ИИ';">
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <!-- Segment 1: Foundations of AI -->
+        <section id="segment1" class="py-16 px-8">
+            <div class="container mx-auto max-w-6xl">
+                <div class="mb-12">
+                    <span class="text-sage font-medium tracking-wide">СЕГМЕНТ 1</span>
+                    <h2 class="font-serif text-4xl font-bold text-navy mt-2 mb-4">Основы ИИ</h2>
+                    <p class="text-lg text-gray-600 max-w-4xl">
+                        Первые двенадцать недель знакомят студентов с основными концепциями искусственного интеллекта, его историей, этическими соображениями и фундаментальными принципами программирования с использованием Python.
+                    </p>
+                </div>
+
+                <div class="space-y-8">
+                    <!-- Weeks 1-4 -->
+                    <div class="week-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-serif text-xl font-semibold text-navy">Недели 1-4: Введение в ИИ и Основы Python</h3>
+                            <span class="bg-sage/20 text-sage px-3 py-1 rounded-full text-sm font-medium">Основы</span>
+                        </div>
+                        <div class="grid lg:grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="font-semibold mb-4 text-teal">Основные Концепции</h4>
+                                <ul class="space-y-2 text-sm text-gray-600">
+                                    <li class="flex items-start space-x-2">
+                                        <svg class="svg-inline--fa fa-brain text-sage mt-1 text-xs" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="brain" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg=""><path fill="currentColor" d="M128 0C110.3 0 96 14.3 96 32c0 10.9 5.3 20.5 13.5 26.6C68.8 83.9 32 144.9 32 208c0 106 86 192 192 192s192-86 192-192c0-63.1-36.8-124.1-80.5-149.4C474.7 52.5 480 42.9 480 32c0-17.7-14.3-32-32-32H128zM96 208c0 47.9 13.9 92.5 38.6 130.1c-1.4-1.6-2.8-3.2-4.2-4.8c-21.1-23.7-37.5-50.6-48.8-79.5c-11.2-28.9-17-59.4-17-90.8c0-3.3 .2-6.6 .5-9.8C62.6 164.7 48 185.7 48 208c0 88.4 71.6 160 160 160s160-71.6 160-160c0-22.3-14.6-43.3-36.3-56.1c.3 3.2 .5 6.5 .5 9.8c0 31.4-5.8 61.9-17 90.8c-11.3 28.9-27.7 55.8-48.8 79.5c-1.4 1.6-2.8 3.2-4.2 4.8c24.7-37.6 38.6-82.2 38.6-130.1c0-79.5-51.9-146.5-124.4-171.1C297.8 28.1 320 64.2 320 104c0 33.1-26.9 60-60 60s-60-26.9-60-60c0-39.8 22.2-75.9 54.4-99.1C147.9 61.5 96 130.5 96 208zM288 104c0 13.3-10.7 24-24 24s-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24z"></path></svg>
+                                        <span><strong>Что такое ИИ?</strong> Определения, типы (УИИ, ОИИ, СИИ)</span>
+                                    </li>
+                                    <li class="flex items-start space-x-2">
+                                        <svg class="svg-inline--fa fa-history text-sage mt-1 text-xs" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="history" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M128 0C110.3 0 96 14.3 96 32c0 10.9 5.3 20.5 13.5 26.6C68.8 83.9 32 144.9 32 208c0 106 86 192 192 192s192-86 192-192c0-63.1-36.8-124.1-80.5-149.4C474.7 52.5 480 42.9 480 32c0-17.7-14.3-32-32-32H128zM96 208c0 47.9 13.9 92.5 38.6 130.1c-1.4-1.6-2.8-3.2-4.2-4.8c-21.1-23.7-37.5-50.6-48.8-79.5c-11.2-28.9-17-59.4-17-90.8c0-3.3 .2-6.6 .5-9.8C62.6 164.7 48 185.7 48 208c0 88.4 71.6 160 160 160s160-71.6 160-160c0-22.3-14.6-43.3-36.3-56.1c.3 3.2 .5 6.5 .5 9.8c0 31.4-5.8 61.9-17 90.8c-11.3 28.9-27.7 55.8-48.8 79.5c-1.4 1.6-2.8 3.2-4.2 4.8c24.7-37.6 38.6-82.2 38.6-130.1c0-79.5-51.9-146.5-124.4-171.1C297.8 28.1 320 64.2 320 104c0 33.1-26.9 60-60 60s-60-26.9-60-60c0-39.8 22.2-75.9 54.4-99.1C147.9 61.5 96 130.5 96 208zM288 104c0 13.3-10.7 24-24 24s-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24z"></path></svg>
+                                        <span><strong>История ИИ:</strong> Ключевые вехи и пионеры</span>
+                                    </li>
+                                    <li class="flex items-start space-x-2">
+                                        <svg class="svg-inline--fa fa-robot text-sage mt-1 text-xs" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="robot" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M320 0c17.7 0 32 14.3 32 32V96H472c39.8 0 72 32.2 72 72V440c0 39.8-32.2 72-72 72H168c-39.8 0-72-32.2-72-72V168c0-39.8 32.2-72 72-72H288V32c0-17.7 14.3-32 32-32zM208 384c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H208zm96 0c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H304zm96 0c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H400zM264 256a40 40 0 1 0 -80 0 40 40 0 1 0 80 0zm152 40a40 40 0 1 0 0-80 40 40 0 1 0 0 80zM48 224H64V416H48c-26.5 0-48-21.5-48-48V272c0-26.5 21.5-48 48-48zm544 0c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H576V224h16z"></path></svg>
+                                        <span><strong>Этический ИИ:</strong> Предвзятость, конфиденциальность, ответственность</span>
+                                    </li>
+                                    <li class="flex items-start space-x-2">
+                                        <svg class="svg-inline--fa fa-code text-sage mt-1 text-xs" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="code" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M320 0c17.7 0 32 14.3 32 32V96H472c39.8 0 72 32.2 72 72V440c0 39.8-32.2 72-72 72H168c-39.8 0-72-32.2-72-72V168c0-39.8 32.2-72 72-72H288V32c0-17.7 14.3-32 32-32zM208 384c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H208zm96 0c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H304zm96 0c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H400zM264 256a40 40 0 1 0 -80 0 40 40 0 1 0 80 0zm152 40a40 40 0 1 0 0-80 40 40 0 1 0 0 80zM48 224H64V416H48c-26.5 0-48-21.5-48-48V272c0-26.5 21.5-48 48-48zm544 0c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H576V224h16z"></path></svg>
+                                        <span><strong>Основы Python:</strong> Переменные, типы данных, управление потоком</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-4 text-teal">Практические Занятия</h4>
+                                <div class="space-y-3">
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <h5 class="font-medium text-sm mb-2">Простой Чат-бот</h5>
+                                        <p class="text-xs text-gray-600">Создание чат-бота на основе правил на Python</p>
+                                    </div>
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <h5 class="font-medium text-sm mb-2">Игра "Дерево Решений"</h5>
+                                        <p class="text-xs text-gray-600">Создание игры "20 вопросов" с использованием базовой логики</p>
+                                    </div>
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <h5 class="font-medium text-sm mb-2">Рассказ Данных</h5>
+                                        <p class="text-xs text-gray-600">Визуализация простых наборов данных с помощью библиотек Python</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Weeks 5-8 -->
+                    <div class="week-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-serif text-xl font-semibold text-navy">Недели 5-8: Данные и Алгоритмы</h3>
+                            <span class="bg-teal/20 text-teal px-3 py-1 rounded-full text-sm font-medium">Наука о Данных</span>
+                        </div>
+                        <div class="grid lg:grid-cols-3 gap-6">
+                            <div>
+                                <h4 class="font-semibold mb-3 text-teal">Концепции Данных</h4>
+                                <ul class="space-y-1 text-sm text-gray-600">
+                                    <li>• Типы данных (числовые, категориальные)</li>
+                                    <li>• Методы сбора данных</li>
+                                    <li>• Очистка и предварительная обработка данных</li>
+                                    <li>• Введение в Pandas для манипуляции данными</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-3 text-teal">Алгоритмическое Мышление</h4>
+                                <ul class="space-y-1 text-sm text-gray-600">
+                                    <li>• Что такое алгоритм?</li>
+                                    <li>• Блок-схемы и псевдокод</li>
+                                    <li>• Алгоритмы сортировки (пузырьковая, выборочная)</li>
+                                    <li>• Алгоритмы поиска (линейный, бинарный)</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-3 text-teal">Решение Проблем</h4>
+                                <div class="space-y-2">
+                                    <div class="bg-gray-50 p-2 rounded text-xs">
+                                        <span class="font-medium">Логические Головоломки:</span> ИИ как решатель проблем
+                                    </div>
+                                    <div class="bg-gray-50 p-2 rounded text-xs">
+                                        <span class="font-medium">Поиск Пути:</span> Простые алгоритмы решения лабиринтов
+                                    </div>
+                                    <div class="bg-gray-50 p-2 rounded text-xs">
+                                        <span class="font-medium">Основы Теории Игр:</span> ИИ для Крестиков-Ноликов
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Weeks 9-12 -->
+                    <div class="week-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-serif text-xl font-semibold text-navy">Недели 9-12: ИИ в Реальном Мире и Проект</h3>
+                            <span class="bg-clay/20 text-clay px-3 py-1 rounded-full text-sm font-medium">Применение</span>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-semibold mb-4 text-teal">ИИ в Реальном Мире</h4>
+                                <div class="space-y-3">
+                                    <div class="flex items-center space-x-3">
+                                        <svg class="svg-inline--fa fa-car text-clay" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="car" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg=""><path fill="currentColor" d="M128 0C110.3 0 96 14.3 96 32c0 10.9 5.3 20.5 13.5 26.6C68.8 83.9 32 144.9 32 208c0 106 86 192 192 192s192-86 192-192c0-63.1-36.8-124.1-80.5-149.4C474.7 52.5 480 42.9 480 32c0-17.7-14.3-32-32-32H128zM96 208c0 47.9 13.9 92.5 38.6 130.1c-1.4-1.6-2.8-3.2-4.2-4.8c-21.1-23.7-37.5-50.6-48.8-79.5c-11.2-28.9-17-59.4-17-90.8c0-3.3 .2-6.6 .5-9.8C62.6 164.7 48 185.7 48 208c0 88.4 71.6 160 160 160s160-71.6 160-160c0-22.3-14.6-43.3-36.3-56.1c.3 3.2 .5 6.5 .5 9.8c0 31.4-5.8 61.9-17 90.8c-11.3 28.9-27.7 55.8-48.8 79.5c-1.4 1.6-2.8 3.2-4.2 4.8c24.7-37.6 38.6-82.2 38.6-130.1c0-79.5-51.9-146.5-124.4-171.1C297.8 28.1 320 64.2 320 104c0 33.1-26.9 60-60 60s-60-26.9-60-60c0-39.8 22.2-75.9 54.4-99.1C147.9 61.5 96 130.5 96 208zM288 104c0 13.3-10.7 24-24 24s-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24z"></path></svg>
+                                        <div>
+                                            <h5 class="font-medium text-sm">Беспилотные Автомобили</h5>
+                                            <p class="text-xs text-gray-600">Как ИИ воспринимает и ориентируется</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-3">
+                                        <svg class="svg-inline--fa fa-stethoscope text-clay" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="stethoscope" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg=""><path fill="currentColor" d="M128 0C110.3 0 96 14.3 96 32c0 10.9 5.3 20.5 13.5 26.6C68.8 83.9 32 144.9 32 208c0 106 86 192 192 192s192-86 192-192c0-63.1-36.8-124.1-80.5-149.4C474.7 52.5 480 42.9 480 32c0-17.7-14.3-32-32-32H128zM96 208c0 47.9 13.9 92.5 38.6 130.1c-1.4-1.6-2.8-3.2-4.2-4.8c-21.1-23.7-37.5-50.6-48.8-79.5c-11.2-28.9-17-59.4-17-90.8c0-3.3 .2-6.6 .5-9.8C62.6 164.7 48 185.7 48 208c0 88.4 71.6 160 160 160s160-71.6 160-160c0-22.3-14.6-43.3-36.3-56.1c.3 3.2 .5 6.5 .5 9.8c0 31.4-5.8 61.9-17 90.8c-11.3 28.9-27.7 55.8-48.8 79.5c-1.4 1.6-2.8 3.2-4.2 4.8c24.7-37.6 38.6-82.2 38.6-130.1c0-79.5-51.9-146.5-124.4-171.1C297.8 28.1 320 64.2 320 104c0 33.1-26.9 60-60 60s-60-26.9-60-60c0-39.8 22.2-75.9 54.4-99.1C147.9 61.5 96 130.5 96 208zM288 104c0 13.3-10.7 24-24 24s-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24z"></path></svg>
+                                        <div>
+                                            <h5 class="font-medium text-sm">ИИ в Здравоохранении</h5>
+                                            <p class="text-xs text-gray-600">Диагностика заболеваний, открытие лекарств</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-3">
+                                        <svg class="svg-inline--fa fa-globe text-clay" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="globe" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg=""><path fill="currentColor" d="M128 0C110.3 0 96 14.3 96 32c0 10.9 5.3 20.5 13.5 26.6C68.8 83.9 32 144.9 32 208c0 106 86 192 192 192s192-86 192-192c0-63.1-36.8-124.1-80.5-149.4C474.7 52.5 480 42.9 480 32c0-17.7-14.3-32-32-32H128zM96 208c0 47.9 13.9 92.5 38.6 130.1c-1.4-1.6-2.8-3.2-4.2-4.8c-21.1-23.7-37.5-50.6-48.8-79.5c-11.2-28.9-17-59.4-17-90.8c0-3.3 .2-6.6 .5-9.8C62.6 164.7 48 185.7 48 208c0 88.4 71.6 160 160 160s160-71.6 160-160c0-22.3-14.6-43.3-36.3-56.1c.3 3.2 .5 6.5 .5 9.8c0 31.4-5.8 61.9-17 90.8c-11.3 28.9-27.7 55.8-48.8 79.5c-1.4 1.6-2.8 3.2-4.2 4.8c24.7-37.6 38.6-82.2 38.6-130.1c0-79.5-51.9-146.5-124.4-171.1C297.8 28.1 320 64.2 320 104c0 33.1-26.9 60-60 60s-60-26.9-60-60c0-39.8 22.2-75.9 54.4-99.1C147.9 61.5 96 130.5 96 208zM288 104c0 13.3-10.7 24-24 24s-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24z"></path></svg>
+                                        <div>
+                                            <h5 class="font-medium text-sm">ИИ в Климатологии</h5>
+                                            <p class="text-xs text-gray-600">Прогнозирование погодных условий, климатическое моделирование</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-4 text-teal">Мини-Проект: Умный Домашний Помощник</h4>
+                                <p class="text-sm text-gray-600 mb-3">
+                                    Разработайте базового голосового помощника, который может отвечать на простые команды и выполнять предопределенные задачи.
+                                </p>
+                                <div class="space-y-2">
+                                    <span class="bg-white px-3 py-1 rounded-full text-xs font-medium">Голосовой Ввод</span>
+                                    <span class="bg-white px-3 py-1 rounded-full text-xs font-medium">Распознавание Команд</span>
+                                    <span class="bg-white px-3 py-1 rounded-full text-xs font-medium">Автоматизация Задач</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <!-- Segment 2: Machine Learning -->
+        <section id="segment2" class="py-16 px-8 bg-white">
+            <div class="container mx-auto max-w-6xl">
+                <div class="mb-12">
+                    <span class="text-sage font-medium tracking-wide">СЕГМЕНТ 2</span>
+                    <h2 class="font-serif text-4xl font-bold text-navy mt-2 mb-4">Машинное Обучение</h2>
+                    <p class="text-lg text-gray-600 max-w-4xl">
+                        Следующие двенадцать недель погружают в увлекательный мир машинного обучения, охватывая обучение с учителем, без учителя и обучение с подкреплением, с практическими реализациями с использованием scikit-learn.
+                    </p>
+                </div>
+
+                <div class="space-y-8">
+                    <!-- Weeks 13-16 -->
+                    <div class="week-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-serif text-xl font-semibold text-navy">Недели 13-16: Обучение с Учителем - Регрессия и Классификация</h3>
+                            <span class="bg-sage/20 text-sage px-3 py-1 rounded-full text-sm font-medium">Прогностические Модели</span>
+                        </div>
+                        <div class="grid lg:grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="font-semibold mb-4 text-teal">Модели Регрессии</h4>
+                                <ul class="space-y-2 text-sm text-gray-600">
+                                    <li class="flex items-start space-x-2">
+                                        <svg class="svg-inline--fa fa-chart-line text-sage mt-1 text-xs" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chart-line" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm406.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L320 210.7l-57.4-57.4c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L240 221.3l57.4 57.4c12.5 12.5 32.8 12.5 45.3 0l128-128z"></path></svg>
+                                        <span><strong>Линейная Регрессия:</strong> Прогнозирование непрерывных значений</span>
+                                    </li>
+                                    <li class="flex items-start space-x-2">
+                                        <svg class="svg-inline--fa fa-chart-area text-sage mt-1 text-xs" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chart-area" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm400 64H272c-8.8 0-16 7.2-16 16v96c0 8.8 7.2 16 16 16h32v32c0 17.7 14.3 32 32 32h64c17.7 0 32-14.3 32-32V288h32c8.8 0 16-7.2 16-16V144c0-8.8-7.2-16-16-16zM320 160h96v64H320V160zm128 0h32v64H448V160zm-128 96h96v32H320V256zm128 0h32v32H448V256z"></path></svg>
+                                        <span><strong>Полиномиальная Регрессия:</strong> Обработка нелинейных зависимостей</span>
+                                    </li>
+                                    <li class="flex items-start space-x-2">
+                                        <svg class="svg-inline--fa fa-tree text-sage mt-1 text-xs" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="tree" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm400 64H272c-8.8 0-16 7.2-16 16v96c0 8.8 7.2 16 16 16h32v32c0 17.7 14.3 32 32 32h64c17.7 0 32-14.3 32-32V288h32c8.8 0 16-7.2 16-16V144c0-8.8-7.2-16-16-16zM320 160h96v64H320V160zm128 0h32v64H448V160zm-128 96h96v32H320V256zm128 0h32v32H448V256z"></path></svg>
+                                        <span><strong>Деревья Решений для Регрессии:</strong> Прогнозы на основе деревьев</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-4 text-teal">Модели Классификации</h4>
+                                <div class="space-y-3">
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <h5 class="font-medium text-sm mb-2">Логистическая Регрессия</h5>
+                                        <p class="text-xs text-gray-600">Прогнозирование бинарных исходов (да/нет)</p>
+                                    </div>
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <h5 class="font-medium text-sm mb-2">Метод K-ближайших Соседей (KNN)</h5>
+                                        <p class="text-xs text-gray-600">Классификация на основе близости</p>
+                                    </div>
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <h5 class="font-medium text-sm mb-2">Метод Опорных Векторов (SVM)</h5>
+                                        <p class="text-xs text-gray-600">Поиск оптимальных границ решений</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Weeks 17-20 -->
+                    <div class="week-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-serif text-xl font-semibold text-navy">Недели 17-20: Обучение без Учителя и Нейронные Сети</h3>
+                            <span class="bg-teal/20 text-teal px-3 py-1 rounded-full text-sm font-medium">Продвинутое МО</span>
+                        </div>
+                        <div class="grid lg:grid-cols-3 gap-6">
+                            <div>
+                                <h4 class="font-semibold mb-3 text-teal">Обучение без Учителя</h4>
+                                <ul class="space-y-1 text-sm text-gray-600">
+                                    <li>• Кластеризация K-Means</li>
+                                    <li>• Иерархическая Кластеризация</li>
+                                    <li>• Метод Главных Компонент (PCA)</li>
+                                    <li>• Обнаружение Аномалий</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-3 text-teal">Основы Нейронных Сетей</h4>
+                                <ul class="space-y-1 text-sm text-gray-600">
+                                    <li>• Перцептроны и Многослойные Перцептроны</li>
+                                    <li>• Функции Активации</li>
+                                    <li>• Обратное Распространение Ошибки</li>
+                                    <li>• Введение в Keras/TensorFlow</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-3 text-teal">Введение в Обучение с Подкреплением</h4>
+                                <ul class="space-y-1 text-sm text-gray-600">
+                                    <li>• Агенты, Среды, Награды</li>
+                                    <li>• Q-обучение (Концептуально)</li>
+                                    <li>• Простая игра с обучением с подкреплением (например, Gridworld)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Weeks 21-24 -->
+                    <div class="week-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-serif text-xl font-semibold text-navy">Недели 21-24: Оценка Моделей и Проект по МО</h3>
+                            <span class="bg-clay/20 text-clay px-3 py-1 rounded-full text-sm font-medium">Реализация</span>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-semibold mb-4 text-teal">Оценка Модели</h4>
+                                <div class="space-y-3">
+                                    <div class="flex items-center space-x-3">
+                                        <svg class="svg-inline--fa fa-chart-pie text-clay" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chart-pie" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm400 64H272c-8.8 0-16 7.2-16 16v96c0 8.8 7.2 16 16 16h32v32c0 17.7 14.3 32 32 32h64c17.7 0 32-14.3 32-32V288h32c8.8 0 16-7.2 16-16V144c0-8.8-7.2-16-16-16zM320 160h96v64H320V160zm128 0h32v64H448V160zm-128 96h96v32H320V256zm128 0h32v32H448V256z"></path></svg>
+                                        <div>
+                                            <h5 class="font-medium text-sm">Метрики:</h5>
+                                            <p class="text-xs text-gray-600">Точность, полнота, F1-мера</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-3">
+                                        <svg class="svg-inline--fa fa-crosshairs text-clay" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="crosshairs" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm400 64H272c-8.8 0-16 7.2-16 16v96c0 8.8 7.2 16 16 16h32v32c0 17.7 14.3 32 32 32h64c17.7 0 32-14.3 32-32V288h32c8.8 0 16-7.2 16-16V144c0-8.8-7.2-16-16-16zM320 160h96v64H320V160zm128 0h32v64H448V160zm-128 96h96v32H320V256zm128 0h32v32H448V256z"></path></svg>
+                                        <div>
+                                            <h5 class="font-medium text-sm">Перекрестная Проверка:</h5>
+                                            <p class="text-xs text-gray-600">Обеспечение надежности модели</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-3">
+                                        <svg class="svg-inline--fa fa-flask text-clay" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="flask" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm400 64H272c-8.8 0-16 7.2-16 16v96c0 8.8 7.2 16 16 16h32v32c0 17.7 14.3 32 32 32h64c17.7 0 32-14.3 32-32V288h32c8.8 0 16-7.2 16-16V144c0-8.8-7.2-16-16-16zM320 160h96v64H320V160zm128 0h32v64H448V160zm-128 96h96v32H320V256zm128 0h32v32H448V256z"></path></svg>
+                                        <div>
+                                            <h5 class="font-medium text-sm">Настройка Гиперпараметров:</h5>
+                                            <p class="text-xs text-gray-600">Оптимизация производительности модели</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-4 text-teal">Демонстрация Проекта по МО</h4>
+                                <p class="text-sm text-gray-600 mb-3">
+                                    Студенты выполняют комплексный проект по машинному обучению, применяя свои знания к реальным наборам данных. Проекты включают прогнозирование цен на жилье, классификацию новостных статей или анализ сегментов клиентов.
+                                </p>
+                                <div class="space-y-2">
+                                    <span class="bg-white px-3 py-1 rounded-full text-xs font-medium">Сбор Данных</span>
+                                    <span class="bg-white px-3 py-1 rounded-full text-xs font-medium">Инженерия Признаков</span>
+                                    <span class="bg-white px-3 py-1 rounded-full text-xs font-medium">Выбор Модели</span>
+                                    <span class="bg-white px-3 py-1 rounded-full text-xs font-medium">Оценка</span>
+                                    <span class="bg-white px-3 py-1 rounded-full text-xs font-medium">Презентация</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Highlight -->
+                <div class="mt-12 p-8 bg-gradient-to-r from-sage/10 to-teal/10 rounded-xl border border-sage/20">
+                    <div class="flex items-start space-x-6">
+                        <div class="w-16 h-16 bg-sage rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg class="svg-inline--fa fa-trophy text-white text-2xl" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="trophy" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg=""><path fill="currentColor" d="M400 0H176c-26.5 0-48.1 21.8-47.1 48.2c.2 5.3 .4 10.6 .7 15.8H24C10.7 64 0 74.7 0 88c0 92.6 33.5 157 78.5 200.7c44.3 43.1 98.3 64.8 138.1 75.8c23.4 6.5 39.4 26 39.4 45.6c0 20.9-17 37.9-37.9 37.9H192c-17.7 0-32 14.3-32 32s14.3 32 32 32H384c17.7 0 32-14.3 32-32s-14.3-32-32-32H357.9C337 448 320 431 320 410.1c0-19.6 15.9-39.2 39.4-45.6c39.9-11 93.9-32.7 138.2-75.8C542.5 245 576 180.6 576 88c0-13.3-10.7-24-24-24H446.4c.3-5.2 .5-10.4 .7-15.8C448.1 21.8 426.5 0 400 0zM48.9 112h84.4c9.1 90.1 29.2 150.3 51.9 190.6c-24.9-11-50.8-26.5-73.2-48.3c-32-31.1-58-76-63-142.3zM464.1 254.3c-22.4 21.8-48.3 37.3-73.2 48.3c22.7-40.3 42.8-100.5 51.9-190.6h84.4c-5.1 66.3-31.1 111.2-63 142.3z"></path></svg>
+                        </div>
+                        <div>
+                            <h4 class="font-serif text-2xl font-semibold text-navy mb-3">Демонстрация Проекта по МО</h4>
+                            <p class="text-gray-600 mb-4">
+                                Студенты выполняют комплексный проект по машинному обучению, применяя свои знания к реальным наборам данных. Проекты включают прогнозирование цен на жилье, классификацию новостных статей или анализ сегментов клиентов.
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-white px-3 py-1 rounded-full text-xs font-medium">Сбор Данных</span>
+                                <span class="bg-white px-3 py-1 rounded-full text-xs font-medium">Инженерия Признаков</span>
+                                <span class="bg-white px-3 py-1 rounded-full text-xs font-medium">Выбор Модели</span>
+                                <span class="bg-white px-3 py-1 rounded-full text-xs font-medium">Оценка</span>
+                                <span class="bg-white px-3 py-1 rounded-full text-xs font-medium">Презентация</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <!-- Segment 3: Computer Vision -->
+        <section id="segment3" class="py-16 px-8 bg-white">
+            <div class="container mx-auto max-w-6xl">
+                <div class="mb-12">
+                    <span class="text-sage font-medium tracking-wide">СЕГМЕНТ 3</span>
+                    <h2 class="font-serif text-4xl font-bold text-navy mt-2 mb-4">Компьютерное Зрение</h2>
+                    <p class="text-lg text-gray-600 max-w-4xl">
+                        Двенадцать недель, посвященных обучению компьютеров "видеть" и интерпретировать визуальную информацию. От базовой обработки изображений до расширенного обнаружения объектов, студенты исследуют, как ИИ понимает и анализирует визуальные данные.
+                    </p>
+                </div>
+
+                <div class="space-y-8">
+                    <!-- Weeks 25-28 -->
+                    <div class="week-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-serif text-xl font-semibold text-navy">Недели 25-28: Основы КЗ и Обработка Изображений</h3>
+                            <span class="bg-sage/20 text-sage px-3 py-1 rounded-full text-sm font-medium">Обработка Изображений</span>
+                        </div>
+                        <div class="grid lg:grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="font-semibold mb-4 text-teal">Основные Концепции</h4>
+                                <ul class="space-y-2 text-sm text-gray-600">
+                                    <li class="flex items-start space-x-2">
+                                        <svg class="svg-inline--fa fa-eye text-sage mt-1 text-xs" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="eye" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg=""><path fill="currentColor" d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3z"></path></svg>
+                                        <span><strong>Основы Цифровых Изображений:</strong> Пиксели, цветовые каналы, разрешение</span>
+                                    </li>
+                                    <li class="flex items-start space-x-2">
+                                        <svg class="svg-inline--fa fa-filter text-sage mt-1 text-xs" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="filter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M3.9 54.9C10.5 40.9 24.5 32 40 32H472c15.5 0 29.5 8.9 36.1 22.9s4.6 30.5-5.2 42.5L320 320.9V448c0 12.1-6.8 23.2-17.7 28.6s-23.8 4.3-33.5-3l-64-48c-8.1-6-12.8-15.5-12.8-25.6V320.9L9 97.3C-.7 85.4-2.8 68.8 3.9 54.9z"></path></svg>
+                                        <span><strong>Фильтрация Изображений:</strong> Сглаживание, повышение резкости, морфологические операции</span>
+                                    </li>
+                                    <li class="flex items-start space-x-2">
+                                        <svg class="svg-inline--fa fa-border-all text-sage mt-1 text-xs" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="border-all" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M384 96V224H256V96H384zm0 192V416H256V288H384zM192 224H64V96H192V224zM64 288H192V416H64V288zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64z"></path></svg>
+                                        <span><strong>Пороги:</strong> Бинарный, адаптивный, метод Оцу</span>
+                                    </li>
+                                    <li class="flex items-start space-x-2">
+                                        <svg class="svg-inline--fa fa-chart-line text-sage mt-1 text-xs" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chart-line" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm406.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L320 210.7l-57.4-57.4c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L240 221.3l57.4 57.4c12.5 12.5 32.8 12.5 45.3 0l128-128z"></path></svg>
+                                        <span><strong>Гистограммы:</strong> Распределение интенсивности, выравнивание</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-4 text-teal">Приложения OpenCV</h4>
+                                <div class="space-y-3">
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <h5 class="font-medium text-sm mb-2">Обнаружение Границ</h5>
+                                        <p class="text-xs text-gray-600">Оператор Собеля, детектор границ Канни</p>
+                                    </div>
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <h5 class="font-medium text-sm mb-2">Улучшение Изображений</h5>
+                                        <p class="text-xs text-gray-600">Настройка контрастности, уменьшение шума</p>
+                                    </div>
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <h5 class="font-medium text-sm mb-2">Преобразование Цветового Пространства</h5>
+                                        <p class="text-xs text-gray-600">RGB в Оттенки Серого, преобразования HSV</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Weeks 29-34 -->
+                    <div class="week-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-serif text-xl font-semibold text-navy">Недели 29-34: Обнаружение Признаков и Глубокое Обучение</h3>
+                            <span class="bg-teal/20 text-teal px-3 py-1 rounded-full text-sm font-medium">Продвинутое КЗ</span>
+                        </div>
+                        <div class="grid lg:grid-cols-3 gap-6">
+                            <div>
+                                <h4 class="font-semibold mb-3 text-teal">Обнаружение Признаков</h4>
+                                <ul class="space-y-1 text-sm text-gray-600">
+                                    <li>• Обнаружение Углов (Харрис)</li>
+                                    <li>• Обнаружение Областей (SIFT, SURF)</li>
+                                    <li>• Дескрипторы Признаков ORB</li>
+                                    <li>• Сопоставление Признаков</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-3 text-teal">CNN для КЗ</h4>
+                                <ul class="space-y-1 text-sm text-gray-600">
+                                    <li>• Сверточные Слои</li>
+                                    <li>• Пулинговые Слои</li>
+                                    <li>• Архитектуры CNN</li>
+                                    <li>• Перенос Обучения</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-3 text-teal">Обнаружение Объектов</h4>
+                                <ul class="space-y-1 text-sm text-gray-600">
+                                    <li>• Фреймворк YOLO</li>
+                                    <li>• Обнаружение SSD</li>
+                                    <li>• Ограничивающие Рамки</li>
+                                    <li>• Обнаружение в Реальном Времени</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Weeks 35-36 -->
+                    <div class="week-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-serif text-xl font-semibold text-navy">Недели 35-36: Продвинутые Темы и Проект</h3>
+                            <span class="bg-clay/20 text-clay px-3 py-1 rounded-full text-sm font-medium">Специализация</span>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-semibold mb-4 text-teal">Продвинутые Приложения</h4>
+                                <div class="space-y-3">
+                                    <div class="flex items-center space-x-3">
+                                        <svg class="svg-inline--fa fa-user text-clay" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="user" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"></path></svg>
+                                        <div>
+                                            <h5 class="font-medium text-sm">Распознавание Лиц</h5>
+                                            <p class="text-xs text-gray-600">Каскады Хаара, генерация эмбеддингов</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-3">
+                                        <svg class="svg-inline--fa fa-font text-clay" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="font" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M254 52.8C249.3 40.3 237.3 32 224 32s-25.3 8.3-30 20.8L57.8 416H32c-17.7 0-32 14.3-32 32s14.3 32 32 32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32h-1.8l18-48H303.8l18 48H320c-17.7 0-32 14.3-32 32s14.3 32 32 32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H390.2L254 52.8zM279.8 304H168.2L224 155.1 279.8 304z"></path></svg>
+                                        <div>
+                                            <h5 class="font-medium text-sm">Оптическое Распознавание Символов</h5>
+                                            <p class="text-xs text-gray-600">Tesseract OCR, обнаружение текста</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-3">
+                                        <svg class="svg-inline--fa fa-scissors text-clay" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="scissors" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M256 192l-39.5-39.5c4.9-12.6 7.5-26.2 7.5-40.5C224 50.1 173.9 0 112 0S0 50.1 0 112s50.1 112 112 112c14.3 0 27.9-2.7 40.5-7.5L192 256l-39.5 39.5c-12.6-4.9-26.2-7.5-40.5-7.5C50.1 288 0 338.1 0 400s50.1 112 112 112s112-50.1 112-112c0-14.3-2.7-27.9-7.5-40.5L499.2 76.8c7.1-7.1 7.1-18.5 0-25.6c-28.3-28.3-74.1-28.3-102.4 0L256 192zm22.6 150.6L396.8 460.8c28.3 28.3 74.1 28.3 102.4 0c7.1-7.1 7.1-18.5 0-25.6L342.6 278.6l-64 64zM64 112a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm48 240a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"></path></svg>
+                                        <div>
+                                            <h5 class="font-medium text-sm">Сегментация Изображений</h5>
+                                            <p class="text-xs text-gray-600">Концепции семантической сегментации</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-4 text-teal">Примеры Проектов</h4>
+                                <div class="space-y-2">
+                                    <div class="bg-navy/10 p-3 rounded text-sm">
+                                        <strong>Система Распознавания Лиц</strong>
+                                        <p class="text-xs text-gray-600 mt-1">Создание системы, которая идентифицирует и верифицирует лица</p>
+                                    </div>
+                                    <div class="bg-teal/10 p-3 rounded text-sm">
+                                        <strong>Отслеживание Объектов</strong>
+                                        <p class="text-xs text-gray-600 mt-1">Отслеживание объектов по видеокадрам</p>
+                                    </div>
+                                    <div class="bg-sage/10 p-3 rounded text-sm">
+                                        <strong>Передача Стиля Изображений</strong>
+                                        <p class="text-xs text-gray-600 mt-1">Применение художественных стилей к фотографиям</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <!-- Segment 4: Natural Language Processing -->
+        <section id="segment4" class="py-16 px-8">
+            <div class="container mx-auto max-w-6xl">
+                <div class="mb-12">
+                    <span class="text-sage font-medium tracking-wide">СЕГМЕНТ 4</span>
+                    <h2 class="font-serif text-4xl font-bold text-navy mt-2 mb-4">Обработка Естественного Языка</h2>
+                    <p class="text-lg text-gray-600 max-w-4xl">
+                        Двенадцать недель, посвященных изучению того, как ИИ понимает, интерпретирует и генерирует человеческий язык. От предварительной обработки текста до продвинутых языковых моделей, студенты создают практические приложения НЛП и развивают критическое мышление о языковых технологиях.
+                    </p>
+                </div>
+
+                <div class="space-y-8">
+                    <!-- Weeks 37-40 -->
+                    <div class="week-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-serif text-xl font-semibold text-navy">Недели 37-40: Основы НЛП и Представление Текста</h3>
+                            <span class="bg-sage/20 text-sage px-3 py-1 rounded-full text-sm font-medium">Обработка Текста</span>
+                        </div>
+                        <div class="grid lg:grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="font-semibold mb-4 text-teal">Предварительная Обработка Текста</h4>
+                                <div class="space-y-3">
+                                    <div class="border-l-4 border-sage pl-4">
+                                        <h5 class="font-medium text-sm">Токенизация</h5>
+                                        <p class="text-xs text-gray-600">Разбиение текста на слова или предложения</p>
+                                    </div>
+                                    <div class="border-l-4 border-teal pl-4">
+                                        <h5 class="font-medium text-sm">Удаление Стоп-слов</h5>
+                                        <p class="text-xs text-gray-600">Удаление общих, малозначимых слов</p>
+                                    </div>
+                                    <div class="border-l-4 border-clay pl-4">
+                                        <h5 class="font-medium text-sm">Стемминг и Лемматизация</h5>
+                                        <p class="text-xs text-gray-600">Приведение слов к их корневым формам</p>
+                                    </div>
+                                    <div class="border-l-4 border-navy pl-4">
+                                        <h5 class="font-medium text-sm">Распознавание Именованных Сущностей</h5>
+                                        <p class="text-xs text-gray-600">Идентификация людей, мест, организаций</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-4 text-teal">Представление Текста</h4>
+                                <div class="space-y-3">
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <h5 class="font-medium text-sm mb-2">Мешок Слов (Bag-of-Words)</h5>
+                                        <p class="text-xs text-gray-600">Векторы частотности слов</p>
+                                    </div>
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <h5 class="font-medium text-sm mb-2">TF-IDF</h5>
+                                        <p class="text-xs text-gray-600">Взвешивание важности терминов</p>
+                                    </div>
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <h5 class="font-medium text-sm mb-2">Векторные Представления Слов</h5>
+                                        <p class="text-xs text-gray-600">Семантические векторы Word2Vec, GloVe</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Weeks 41-46 -->
+                    <div class="week-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-serif text-xl font-semibold text-navy">Недели 41-46: Задачи НЛП и Продвинутые Модели</h3>
+                            <span class="bg-teal/20 text-teal px-3 py-1 rounded-full text-sm font-medium">Приложения</span>
+                        </div>
+                        <div class="grid lg:grid-cols-3 gap-6">
+                            <div>
+                                <h4 class="font-semibold mb-3 text-teal">Основные Задачи НЛП</h4>
+                                <ul class="space-y-1 text-sm text-gray-600">
+                                    <li>• Анализ Настроений</li>
+                                    <li>• Классификация Текста</li>
+                                    <li>• Языковое Моделирование</li>
+                                    <li>• Генерация Текста</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-3 text-teal">Последовательные Модели</h4>
+                                <ul class="space-y-1 text-sm text-gray-600">
+                                    <li>• Рекуррентные Нейронные Сети</li>
+                                    <li>• LSTM и GRU</li>
+                                    <li>• Механизм Внимания</li>
+                                    <li>• Трансформеры (Концептуально)</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-3 text-teal">Инструменты и Библиотеки</h4>
+                                <div class="space-y-2">
+                                    <div class="bg-gray-50 p-2 rounded text-xs">
+                                        <span class="font-medium">NLTK:</span> Обработка Текста
+                                    </div>
+                                    <div class="bg-gray-50 p-2 rounded text-xs">
+                                        <span class="font-medium">spaCy:</span> Промышленное НЛП
+                                    </div>
+                                    <div class="bg-gray-50 p-2 rounded text-xs">
+                                        <span class="font-medium">Gensim:</span> Векторные Представления Слов
+                                    </div>
+                                    <div class="bg-gray-50 p-2 rounded text-xs">
+                                        <span class="font-medium">Transformers:</span> BERT/GPT
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Weeks 47-48 -->
+                    <div class="week-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-serif text-xl font-semibold text-navy">Недели 47-48: Разработка Проекта по НЛП</h3>
+                            <span class="bg-clay/20 text-clay px-3 py-1 rounded-full text-sm font-medium">Реализация</span>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-semibold mb-4 text-teal">Варианты Проектов</h4>
+                                <div class="space-y-3">
+                                    <div class="flex items-center space-x-3">
+                                        <svg class="svg-inline--fa fa-robot text-clay" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="robot" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M320 0c17.7 0 32 14.3 32 32V96H472c39.8 0 72 32.2 72 72V440c0 39.8-32.2 72-72 72H168c-39.8 0-72-32.2-72-72V168c0-39.8 32.2-72 72-72H288V32c0-17.7 14.3-32 32-32zM208 384c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H208zm96 0c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H304zm96 0c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H400zM264 256a40 40 0 1 0 -80 0 40 40 0 1 0 80 0zm152 40a40 40 0 1 0 0-80 40 40 0 1 0 0 80zM48 224H64V416H48c-26.5 0-48-21.5-48-48V272c0-26.5 21.5-48 48-48zm544 0c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H576V224h16z"></path></svg>
+                                        <div>
+                                            <h5 class="font-medium text-sm">Интеллектуальный Чат-бот</h5>
+                                            <p class="text-xs text-gray-600">Система разговора на основе правил или извлечения</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-3">
+                                        <svg class="svg-inline--fa fa-down-left-and-up-right-to-center text-clay" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="down-left-and-up-right-to-center" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M439 7c9.4-9.4 24.6-9.4 33.9 0l32 32c9.4 9.4 9.4 24.6 0 33.9l-87 87 39 39c6.9 6.9 8.9 17.2 5.2 26.2s-12.5 14.8-22.2 14.8H296c-13.3 0-24-10.7-24-24V72c0-9.7 5.8-18.5 14.8-22.2s19.3-1.7 26.2 5.2l39 39L439 7zM72 272H216c13.3 0 24 10.7 24 24V440c0 9.7-5.8 18.5-14.8 22.2s-19.3 1.7-26.2-5.2l-39-39L73 505c-9.4 9.4-24.6 9.4-33.9 0L7 473c-9.4-9.4-9.4-24.6 0-33.9l87-87L55 313c-6.9-6.9-8.9-17.2-5.2-26.2s12.5-14.8 22.2-14.8z"></path></svg>
+                                        <div>
+                                            <h5 class="font-medium text-sm">Суммаризатор Текста</h5>
+                                            <p class="text-xs text-gray-600">Извлекающее или абстрагирующее суммирование</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-3">
+                                        <svg class="svg-inline--fa fa-language text-clay" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="language" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M0 128C0 92.7 28.7 64 64 64H256h48 16H576c35.3 0 64 28.7 64 64V384c0 35.3-28.7 64-64 64H320 304 256 64c-35.3 0-64-28.7-64-64V128zm320 0V384H576V128H320zM178.3 175.9c-3.2-7.2-10.4-11.9-18.3-11.9s-15.1 4.7-18.3 11.9l-64 144c-4.5 10.1 .1 21.9 10.2 26.4s21.9-.1 26.4-10.2l8.9-20.1h73.6l8.9 20.1c4.5 10.1 16.3 14.6 26.4 10.2s14.6-16.3 10.2-26.4l-64-144zM160 233.2L179 276H141l19-42.8zM448 164c11 0 20 9 20 20v4h44 16c11 0 20 9 20 20s-9 20-20 20h-2l-1.6 4.5c-8.9 24.4-22.4 46.6-39.6 65.4c.9 .6 1.8 1.1 2.7 1.6l18.9 11.3c9.5 5.7 12.5 18 6.9 27.4s-18 12.5-27.4 6.9l-18.9-11.3c-4.5-2.7-8.8-5.5-13.1-8.5c-10.6 7.5-21.9 14-34 19.4l-3.6 1.6c-10.1 4.5-21.9-.1-26.4-10.2s.1-21.9 10.2-26.4l3.6-1.6c6.4-2.9 12.6-6.1 18.5-9.8l-12.2-12.2c-7.8-7.8-7.8-20.5 0-28.3s20.5-7.8 28.3 0l14.6 14.6 .5 .5c12.4-13.1 22.5-28.3 29.8-45H448 376c-11 0-20-9-20-20s9-20 20-20h52v-4c0-11 9-20 20-20z"></path></svg>
+                                        <div>
+                                            <h5 class="font-medium text-sm">Языковой Переводчик</h5>
+                                            <p class="text-xs text-gray-600">Использование API перевода с пользовательскими интерфейсами</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-4 text-teal">Процесс Разработки</h4>
+                                <div class="space-y-2">
+                                    <div class="flex items-center space-x-2 text-sm">
+                                        <div class="w-6 h-6 bg-sage rounded-full flex items-center justify-center text-white text-xs font-bold">1</div>
+                                        <span>Определение Проблемы и Сбор Данных</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2 text-sm">
+                                        <div class="w-6 h-6 bg-teal rounded-full flex items-center justify-center text-white text-xs font-bold">2</div>
+                                        <span>Конвейер Предварительной Обработки Текста</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2 text-sm">
+                                        <div class="w-6 h-6 bg-clay rounded-full flex items-center justify-center text-white text-xs font-bold">3</div>
+                                        <span>Выбор и Обучение Модели</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2 text-sm">
+                                        <div class="w-6 h-6 bg-navy rounded-full flex items-center justify-center text-white text-xs font-bold">4</div>
+                                        <span>Оценка и Развертывание</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ethical Considerations -->
+                    <div class="mt-8 p-6 bg-gradient-to-r from-navy/10 to-teal/10 rounded-xl border border-navy/20">
+                        <h4 class="font-serif text-xl font-semibold text-navy mb-4 flex items-center">
+                            <svg class="svg-inline--fa fa-scale-balanced text-clay mr-3" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="scale-balanced" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M384 32H512c17.7 0 32 14.3 32 32s-14.3 32-32 32H398.4c-5.2 25.8-22.9 47.1-46.4 57.3V448H512c17.7 0 32 14.3 32 32s-14.3 32-32 32H320 128c-17.7 0-32-14.3-32-32s14.3-32 32-32H288V153.3c-23.5-10.3-41.2-31.6-46.4-57.3H128c-17.7 0-32-14.3-32-32s14.3-32 32-32H256c14.6-19.4 37.8-32 64-32s49.4 12.6 64 32zm55.6 288H584.4L512 195.8 439.6 320zM512 416c-62.9 0-115.2-34-126-78.9c-2.6-11 1-22.3 6.7-32.1l95.2-163.2c5-8.6 14.2-13.8 24.1-13.8s19.1 5.3 24.1 13.8l95.2 163.2c5.7 9.8 9.3 21.1 6.7 32.1C627.2 382 574.9 416 512 416zM126.8 195.8L54.4 320H199.3L126.8 195.8zM.9 337.1c-2.6-11 1-22.3 6.7-32.1l95.2-163.2c5-8.6 14.2-13.8 24.1-13.8s19.1 5.3 24.1 13.8l95.2 163.2c5.7 9.8 9.3 21.1 6.7 32.1C242 382 189.7 416 126.8 416S11.7 382 .9 337.1z"></path></svg>
+                            Этические Соображения в НЛП
+                        </h4>
+                        <div class="grid md:grid-cols-2 gap-6 text-sm">
+                            <div>
+                                <h5 class="font-semibold mb-2 text-teal">Ключевые Проблемы</h5>
+                                <ul class="space-y-1 text-gray-600">
+                                    <li>• Предвзятость в обучающих данных и алгоритмах</li>
+                                    <li>• Последствия для конфиденциальности при анализе текста</li>
+                                    <li>• Дезинформация и генерация дипфейков</li>
+                                    <li>• Проблемы с замещением рабочих мест</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold mb-2 text-teal">Ответственные Практики</h5>
+                                <ul class="space-y-1 text-gray-600">
+                                    <li>• Критическая оценка результатов ИИ</li>
+                                    <li>• Разнообразные и репрезентативные наборы данных</li>
+                                    <li>• Прозрачность в принятии решений ИИ</li>
+                                    <li>• Системы "человек в контуре"</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <!-- Segment 5: Capstone Projects -->
+        <section id="segment5" class="py-16 px-8 bg-white">
+            <div class="container mx-auto max-w-6xl">
+                <div class="mb-12">
+                    <span class="text-sage font-medium tracking-wide">СЕГМЕНТ 5</span>
+                    <h2 class="font-serif text-4xl font-bold text-navy mt-2 mb-4">Выпускные Проекты и Обзор</h2>
+                    <p class="text-lg text-gray-600 max-w-4xl">
+                        Последние четыре недели посвящены интегрированным выпускным проектам, где студенты применяют свои всесторонние знания в области ИИ для решения сложных проблем или создания инновационных приложений, демонстрирующих их мастерство в машинном обучении, компьютерном зрении и обработке естественного языка.
+                    </p>
+                </div>
+
+                <div class="space-y-8">
+                    <!-- Weeks 49-50 -->
+                    <div class="week-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-serif text-xl font-semibold text-navy">Недели 49-50: Идеи и Планирование Проекта</h3>
+                            <span class="bg-sage/20 text-sage px-3 py-1 rounded-full text-sm font-medium">Планирование</span>
+                        </div>
+                        <div class="grid lg:grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="font-semibold mb-4 text-teal">Требования к Проекту</h4>
+                                <ul class="space-y-2 text-sm text-gray-600">
+                                    <li class="flex items-start space-x-2">
+                                        <svg class="svg-inline--fa fa-circle-check text-sage mt-1 text-xs" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle-check" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg>
+                                        <span>Интегрировать как минимум две области ИИ (МО, КЗ, НЛП)</span>
+                                    </li>
+                                    <li class="flex items-start space-x-2">
+                                        <svg class="svg-inline--fa fa-circle-check text-sage mt-1 text-xs" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle-check" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg>
+                                        <span>Решить значимую реальную проблему</span>
+                                    </li>
+                                    <li class="flex items-start space-x-2">
+                                        <svg class="svg-inline--fa fa-circle-check text-sage mt-1 text-xs" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle-check" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg>
+                                        <span>Продемонстрировать техническую сложность и инновации</span>
+                                    </li>
+                                    <li class="flex items-start space-x-2">
+                                        <svg class="svg-inline--fa fa-circle-check text-sage mt-1 text-xs" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle-check" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path></svg>
+                                        <span>Включить оценку этических соображений</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-4 text-teal">Процесс Планирования</h4>
+                                <div class="space-y-3">
+                                    <div class="border-l-4 border-teal pl-4">
+                                        <h5 class="font-medium text-sm">Определение Проблемы и Сбор Данных</h5>
+                                        <p class="text-xs text-gray-600">Четко определить проблему и собрать соответствующие данные.</p>
+                                    </div>
+                                    <div class="border-l-4 border-clay pl-4">
+                                        <h5 class="font-medium text-sm">Проектирование Системы и Архитектура</h5>
+                                        <p class="text-xs text-gray-600">Описать компоненты ИИ и их взаимодействие.</p>
+                                    </div>
+                                    <div class="border-l-4 border-navy pl-4">
+                                        <h5 class="font-medium text-sm">Установка Вех и Сроки</h5>
+                                        <p class="text-xs text-gray-600">Разбить проект на управляемые этапы.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Weeks 51-52 -->
+                    <div class="week-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-serif text-xl font-semibold text-navy">Недели 51-52: Реализация Проекта и Презентация</h3>
+                            <span class="bg-teal/20 text-teal px-3 py-1 rounded-full text-sm font-medium">Демонстрация</span>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-semibold mb-4 text-teal">Фокус Реализации</h4>
+                                <ul class="space-y-2 text-sm text-gray-600">
+                                    <li class="flex items-start space-x-2">
+                                        <svg class="svg-inline--fa fa-laptop-code text-sage mt-1 text-xs" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="laptop-code" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M320 0c17.7 0 32 14.3 32 32V96H472c39.8 0 72 32.2 72 72V440c0 39.8-32.2 72-72 72H168c-39.8 0-72-32.2-72-72V168c0-39.8 32.2-72 72-72H288V32c0-17.7 14.3-32 32-32zM208 384c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H208zm96 0c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H304zm96 0c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H400zM264 256a40 40 0 1 0 -80 0 40 40 0 1 0 80 0zm152 40a40 40 0 1 0 0-80 40 40 0 1 0 0 80zM48 224H64V416H48c-26.5 0-48-21.5-48-48V272c0-26.5 21.5-48 48-48zm544 0c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H576V224h16z"></path></svg>
+                                        <span>Кодирование и отладка решения ИИ</span>
+                                    </li>
+                                    <li class="flex items-start space-x-2">
+                                        <svg class="svg-inline--fa fa-chart-bar text-sage mt-1 text-xs" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chart-bar" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm400 64H272c-8.8 0-16 7.2-16 16v96c0 8.8 7.2 16 16 16h32v32c0 17.7 14.3 32 32 32h64c17.7 0 32-14.3 32-32V288h32c8.8 0 16-7.2 16-16V144c0-8.8-7.2-16-16-16zM320 160h96v64H320V160zm128 0h32v64H448V160zm-128 96h96v32H320V256zm128 0h32v32H448V256z"></path></svg>
+                                        <span>Тестирование, доработка и оптимизация моделей</span>
+                                    </li>
+                                    <li class="flex items-start space-x-2">
+                                        <svg class="svg-inline--fa fa-users text-sage mt-1 text-xs" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="users" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M320 0c17.7 0 32 14.3 32 32V96H472c39.8 0 72 32.2 72 72V440c0 39.8-32.2 72-72 72H168c-39.8 0-72-32.2-72-72V168c0-39.8 32.2-72 72-72H288V32c0-17.7 14.3-32 32-32zM208 384c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H208zm96 0c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H304zm96 0c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H400zM264 256a40 40 0 1 0 -80 0 40 40 0 1 0 80 0zm152 40a40 40 0 1 0 0-80 40 40 0 1 0 0 80zM48 224H64V416H48c-26.5 0-48-21.5-48-48V272c0-26.5 21.5-48 48-48zm544 0c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H576V224h16z"></path></svg>
+                                        <span>Совместная разработка и экспертная оценка</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-4 text-teal">Финальная Презентация</h4>
+                                <div class="space-y-3">
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <h5 class="font-medium text-sm mb-2">Демонстрация Проекта</h5>
+                                        <p class="text-xs text-gray-600">Демонстрация работающего приложения ИИ</p>
+                                    </div>
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <h5 class="font-medium text-sm mb-2">Техническое Объяснение</h5>
+                                        <p class="text-xs text-gray-600">Объяснение основных концепций ИИ и реализации</p>
+                                    </div>
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <h5 class="font-medium text-sm mb-2">Этические Размышления</h5>
+                                        <p class="text-xs text-gray-600">Обсуждение социального воздействия и ответственных практик ИИ</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-navy py-12 px-8 text-white text-center">
+            <div class="container mx-auto max-w-6xl">
+                <p id="copyright-text" class="mb-4"></p>
+                <div class="flex justify-center space-x-6 text-xl">
+                    <a href="https://github.com/boodscode237" target="_blank" class="hover:text-sage transition-colors"><i class="fab fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/brice-abodo/" target="_blank" class="hover:text-sage transition-colors"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://twitter.com/monthybrice" target="_blank" class="hover:text-sage transition-colors"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        // Mobile menu toggle functionality
+        document.getElementById('mobile-menu-toggle').addEventListener('click', function() {
+            document.getElementById('toc').classList.toggle('open');
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    // Close mobile menu after clicking
+                    document.getElementById('toc').classList.remove('open');
+                }
+            });
+        });
+
+        // Highlight active section in TOC
+        const sections = document.querySelectorAll('section[id]');
+        const tocLinks = document.querySelectorAll('.toc-fixed a[href^="#"]');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.scrollY >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            tocLinks.forEach(link => {
+                link.classList.remove('font-semibold', 'text-navy');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('font-semibold', 'text-navy');
+                }
+            });
+        });
+
+        // GSAP and Canvas Parallax
+        document.addEventListener('DOMContentLoaded', () => {
+            gsap.registerPlugin(ScrollTrigger);
+
+            const canvas = document.getElementById('parallaxCanvas');
+            const ctx = canvas.getContext('2d');
+
+            let particles = [];
+            const numParticles = 100;
+
+            // Function to resize canvas
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                // Reinitialize particles on resize to fit new dimensions
+                particles = [];
+                for (let i = 0; i < numParticles; i++) {
+                    particles.push(createParticle());
+                }
+            }
+
+            // Create a single particle
+            function createParticle() {
+                return {
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 2 + 0.5, // Smaller particles
+                    speedX: (Math.random() - 0.5) * 0.2, // Slower movement
+                    speedY: (Math.random() - 0.5) * 0.2,
+                    color: `rgba(255, 255, 255, ${Math.random() * 0.6 + 0.2})` // Translucent white
+                };
+            }
+
+            // Draw all particles
+            function drawParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.fill();
+                });
+            }
+
+            // Update particle positions
+            function updateParticles() {
+                particles.forEach(p => {
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+
+                    // Wrap particles around the canvas
+                    if (p.x < 0) p.x = canvas.width;
+                    if (p.x > canvas.width) p.x = 0;
+                    if (p.y < 0) p.y = canvas.height;
+                    if (p.y > canvas.height) p.y = 0;
+                });
+            }
+
+            // Animation loop for canvas
+            function animateCanvas() {
+                updateParticles();
+                drawParticles();
+                requestAnimationFrame(animateCanvas);
+            }
+
+            // Initialize and start canvas animation
+            resizeCanvas(); // Set initial size and create particles
+            animateCanvas(); // Start the particle animation
+
+            // Listen for window resize to adjust canvas
+            window.addEventListener('resize', resizeCanvas);
+
+
+            // GSAP ScrollTrigger animations
+            // Example: Animate elements in Segment 1
+            gsap.from("#segment1 h2", {
+                opacity: 0,
+                y: 50,
+                duration: 1,
+                scrollTrigger: {
+                    trigger: "#segment1",
+                    start: "top 80%", // When the top of the trigger hits 80% of the viewport
+                    end: "top 50%",
+                    scrub: true, // Smoothly animate on scroll
+                    toggleActions: "play none none reverse" // Play on enter, reverse on leave back
+                }
+            });
+
+            gsap.from("#segment1 .week-card", {
+                opacity: 0,
+                x: -100,
+                stagger: 0.2, // Animate each card with a slight delay
+                duration: 1,
+                scrollTrigger: {
+                    trigger: "#segment1",
+                    start: "top 70%",
+                    end: "bottom 30%",
+                    scrub: true,
+                    toggleActions: "play none none reverse"
+                }
+            });
+
+            // Parallax effect for the canvas background
+            gsap.to("#parallaxCanvas", {
+                y: () => window.innerHeight * 0.3, // Move canvas up by 30% of viewport height
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "body",
+                    start: "top top",
+                    end: "bottom top",
+                    scrub: true
+                }
+            });
+
+            // Animate elements in Segment 2
+            gsap.from("#segment2 h2", {
+                opacity: 0,
+                y: 50,
+                duration: 1,
+                scrollTrigger: {
+                    trigger: "#segment2",
+                    start: "top 80%",
+                    end: "top 50%",
+                    scrub: true,
+                    toggleActions: "play none none reverse"
+                }
+            });
+
+            gsap.from("#segment2 .week-card", {
+                opacity: 0,
+                x: 100,
+                stagger: 0.2,
+                duration: 1,
+                scrollTrigger: {
+                    trigger: "#segment2",
+                    start: "top 70%",
+                    end: "bottom 30%",
+                    scrub: true,
+                    toggleActions: "play none none reverse"
+                }
+            });
+
+            // Animate elements in Segment 3
+            gsap.from("#segment3 h2", {
+                opacity: 0,
+                y: 50,
+                duration: 1,
+                scrollTrigger: {
+                    trigger: "#segment3",
+                    start: "top 80%",
+                    end: "top 50%",
+                    scrub: true,
+                    toggleActions: "play none none reverse"
+                }
+            });
+
+            gsap.from("#segment3 .week-card", {
+                opacity: 0,
+                x: -100,
+                stagger: 0.2,
+                duration: 1,
+                scrollTrigger: {
+                    trigger: "#segment3",
+                    start: "top 70%",
+                    end: "bottom 30%",
+                    scrub: true,
+                    toggleActions: "play none none reverse"
+                }
+            });
+
+            // Animate elements in Segment 4
+            gsap.from("#segment4 h2", {
+                opacity: 0,
+                y: 50,
+                duration: 1,
+                scrollTrigger: {
+                    trigger: "#segment4",
+                    start: "top 80%",
+                    end: "top 50%",
+                    scrub: true,
+                    toggleActions: "play none none reverse"
+                }
+            });
+
+            gsap.from("#segment4 .week-card", {
+                opacity: 0,
+                x: 100,
+                stagger: 0.2,
+                duration: 1,
+                scrollTrigger: {
+                    trigger: "#segment4",
+                    start: "top 70%",
+                    end: "bottom 30%",
+                    scrub: true,
+                    toggleActions: "play none none reverse"
+                }
+            });
+
+            // Animate elements in Segment 5
+            gsap.from("#segment5 h2", {
+                opacity: 0,
+                y: 50,
+                duration: 1,
+                scrollTrigger: {
+                    trigger: "#segment5",
+                    start: "top 80%",
+                    end: "top 50%",
+                    scrub: true,
+                    toggleActions: "play none none reverse"
+                }
+            });
+
+            gsap.from("#segment5 .week-card", {
+                opacity: 0,
+                x: -100,
+                stagger: 0.2,
+                duration: 1,
+                scrollTrigger: {
+                    trigger: "#segment5",
+                    start: "top 70%",
+                    end: "bottom 30%",
+                    scrub: true,
+                    toggleActions: "play none none reverse"
+                }
+            });
+
+            // Animate the hero section text and image on load
+            gsap.from(".hero-grid h1", {
+                opacity: 0,
+                y: -50,
+                duration: 1.5,
+                ease: "power3.out"
+            });
+            gsap.from(".hero-grid p", {
+                opacity: 0,
+                y: 50,
+                duration: 1.5,
+                delay: 0.3,
+                ease: "power3.out"
+            });
+            gsap.from(".hero-grid a", {
+                opacity: 0,
+                scale: 0.8,
+                duration: 1,
+                delay: 0.6,
+                ease: "back.out(1.7)"
+            });
+            gsap.from(".hero-grid img", {
+                opacity: 0,
+                x: 100,
+                duration: 1.5,
+                delay: 0.5,
+                ease: "power3.out"
+            });
+
+            // Dynamic copyright year
+            const copyrightElement = document.getElementById('copyright-text');
+            const currentYear = new Date().getFullYear();
+            const startYear = 2024; // Assuming 2024 is the initial year
+
+            if (currentYear > startYear) {
+                copyrightElement.textContent = `© ${startYear} – ${currentYear} ИИ для Молодых Умов. Все права защищены.`;
+            } else {
+                copyrightElement.textContent = `© ${startYear} ИИ для Молодых Умов. Все права защищены.`;
+            }
+        });
+    </script>
+</body>
+</html>
